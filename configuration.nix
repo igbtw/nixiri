@@ -1,7 +1,7 @@
-# /etc/nixos/configuration.nix
 { config, pkgs, inputs, ... }:
 
 {
+  # Hardware
   imports = [
     ./hardware-configuration.nix
   ];
@@ -11,16 +11,61 @@
     enable = true;
     configurationLimit = 10;
   };
+
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Networking
   networking = {
     hostName = "nixos";
-    networkmanager.enable = true;
+
+    networkmanager = {
+      enable = true;
+      dns = "systemd-resolved";
+    };
+
     nameservers = [
       "1.1.1.1"
-      "8.8.8.8"
+      "1.0.0.1"
     ];
+  };
+
+  # Secure DNS
+  services.resolved = {
+    enable = true;
+
+    settings.Resolve = {
+      DNS = [
+        "1.1.1.1"
+        "1.0.0.1"
+      ];
+
+      FallbackDNS = [
+        "1.1.1.1"
+        "1.0.0.1"
+      ];
+
+      DNSSEC = "true";
+      DNSOverTLS = "true";
+    };
+  };
+
+  # Firewall
+  networking.firewall.enable = true;
+  networking.nftables.enable = true;
+
+  # Kernel hardening
+  boot.kernel.sysctl = {
+    "kernel.kptr_restrict" = 2;
+    "kernel.dmesg_restrict" = 1;
+  };
+
+  # Firmware updates
+  services.fwupd.enable = true;
+
+  # Graphics
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
   };
 
   # Locale and timezone
@@ -52,6 +97,7 @@
   users.users.ig = {
     isNormalUser = true;
     description = "ig";
+
     extraGroups = [
       "networkmanager"
       "wheel"
@@ -83,12 +129,13 @@
     pulse.enable = true;
   };
 
-  # Desktop portals and removable devices
+  # Wayland portals
   xdg.portal = {
     enable = true;
     wlr.enable = true;
   };
 
+  # Removable devices
   services.gvfs.enable = true;
   services.udisks2.enable = true;
 
@@ -102,18 +149,17 @@
       "flakes"
     ];
 
-    # Avoid duplicate store paths when possible.
     auto-optimise-store = true;
   };
 
-  # Periodically remove old generations/store paths.
+  # Garbage collection
   nix.gc = {
     automatic = true;
     dates = "weekly";
     options = "--delete-older-than 14d";
   };
 
-  # ZRAM reduces the need for disk-backed swap.
+  # ZRAM
   zramSwap.enable = true;
 
   # Fonts
@@ -149,7 +195,7 @@
     rust-analyzer
     rustc
 
-    # Theming / desktop integration
+    # Themes and cursor
     adwaita-icon-theme
 
     # Noctalia
@@ -159,9 +205,9 @@
   # Steam
   programs.steam.enable = true;
 
-  # Allow proprietary packages.
+  # Proprietary packages
   nixpkgs.config.allowUnfree = true;
 
-  # Keep this at the version your installation was originally created with.
+  # Installation baseline
   system.stateVersion = "26.05";
 }

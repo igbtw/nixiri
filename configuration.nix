@@ -21,31 +21,29 @@
     networkmanager = {
       enable = true;
       dns = "systemd-resolved";
+
+      connectionConfig = {
+        "ipv4.ignore-auto-dns" = "yes";
+        "ipv6.ignore-auto-dns" = "yes";
+      };
     };
 
-    nameservers = [
-      "1.1.1.1"
-      "1.0.0.1"
-    ];
   };
 
   # Secure DNS
   services.resolved = {
-    enable = true;
+  enable = true;
 
-    settings.Resolve = {
-      DNS = [
-        "1.1.1.1"
-        "1.0.0.1"
-      ];
-
-      FallbackDNS = [
-        "1.1.1.1"
-        "1.0.0.1"
-      ];
+  settings.Resolve = {
+    DNS = [
+      "194.242.2.2#dns.mullvad.net"
+      "2a07:e340::2#dns.mullvad.net"
+    ];
 
       DNSSEC = "true";
       DNSOverTLS = "true";
+
+      Domains = [ "~." ];
     };
   };
 

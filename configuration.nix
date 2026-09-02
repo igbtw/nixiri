@@ -77,16 +77,24 @@
 
   # Networking
 
-  networking = {
-    hostName = "nixos";
+  networking.networkmanager = {
+    enable = true;
+    dns = "systemd-resolved";
 
-    networkmanager = {
-      enable = true;
-      dns = "systemd-resolved";
+    ensureProfiles.profiles."Wired connection 1" = {
+      connection = {
+        id = "Wired connection 1";
+        type = "ethernet";
+      };
 
-      connectionConfig = {
-        "ipv4.ignore-auto-dns" = "yes";
-        "ipv6.ignore-auto-dns" = "yes";
+      ipv4 = {
+        method = "auto";
+        ignore-auto-dns = true;
+      };
+
+      ipv6 = {
+        method = "auto";
+        ignore-auto-dns = true;
       };
     };
   };
@@ -281,23 +289,17 @@
     neovim
     librewolf
     vesktop
-    element-desktop
     prismlauncher
     nautilus
-    onlyoffice-desktopeditors
+    blender
+    obs-studio
+    vlc
 
     # Development
     cargo
     gcc
-    go
-    gopls
     rust-analyzer
     rustc
-
-    # Security / diagnostics
-    lynis
-    tcpdump
-    pciutils
 
     # Themes
     adwaita-icon-theme

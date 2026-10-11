@@ -110,7 +110,7 @@
         "2a07:e340::2#dns.mullvad.net"
       ];
 
-      DNSSEC = "true";
+      # DNSSEC = "true";
       DNSOverTLS = "true";
 
       # Route all normal DNS queries through Mullvad.
@@ -126,11 +126,9 @@
 
   networking.nftables.enable = true;
 
-
   # Firmware
 
   services.fwupd.enable = true;
-
 
   # Graphics
 
@@ -138,7 +136,6 @@
     enable = true;
     enable32Bit = true;
   };
-
 
   # Users
 
@@ -155,7 +152,6 @@
   # Prevent root from being used as a normal login account.
   users.users.root.hashedPassword = "!";
 
-
   # Desktop
 
   programs.niri.enable = true;
@@ -171,7 +167,6 @@
 
   systemd.user.services.niri.enableDefaultPath = false;
 
-
   # Audio
 
   security.rtkit.enable = true;
@@ -182,7 +177,6 @@
     pulse.enable = true;
   };
 
-
   # Wayland Portals
 
   xdg.portal = {
@@ -190,22 +184,18 @@
     wlr.enable = true;
   };
 
-
   # Removable Devices
 
   services.gvfs.enable = true;
   services.udisks2.enable = true;
 
-
   # Flatpak
 
   services.flatpak.enable = true;
 
-
   # Core Dump Hardening
 
   systemd.coredump.enable = false;
-
 
   # Nix
 
@@ -221,7 +211,6 @@
     allowed-users = [ "@users" ];
   };
 
-
   # Garbage Collection
 
   nix.gc = {
@@ -230,11 +219,9 @@
     options = "--delete-older-than 14d";
   };
 
-
   # ZRAM
 
   zramSwap.enable = true;
-
 
   # Locale / Timezone
 
@@ -256,7 +243,6 @@
     };
   };
 
-
   # Keyboard
 
   services.xserver.xkb = {
@@ -264,13 +250,11 @@
     variant = "";
   };
 
-
   # Fonts
 
   fonts.packages = with pkgs; [
     nerd-fonts.iosevka
   ];
-
 
   # Applications
 
@@ -291,15 +275,19 @@
     vesktop
     prismlauncher
     nautilus
-    blender
+    # blender
     obs-studio
-    vlc
+    mpv
+    # onlyoffice-desktopeditors
+    ffmpeg
 
     # Development
     cargo
     gcc
     rust-analyzer
     rustc
+    python3
+    xxd
 
     # Themes
     adwaita-icon-theme
@@ -308,16 +296,13 @@
     inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
-
   # Steam
 
   programs.steam.enable = true;
 
-
   # Unfree
 
   nixpkgs.config.allowUnfree = true;
-
 
   # State Version
 
